@@ -4,7 +4,7 @@ import argparse
 from urllib.parse import urlparse, parse_qs, urlencode
 from .core.xss import XSS
 from .core.ssti import SSTI
-from config import HARDCODED_EXTENSIONS
+from .config import HARDCODED_EXTENSIONS
 
 
 p = argparse.ArgumentParser()

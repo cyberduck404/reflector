@@ -1,7 +1,7 @@
-# What is U2P?
-### URLs to Profit
+# What is Reflector?
+
 
 ## Usage
 ```bash
-cat urls.txt | u2p | tee results.txt
+
 ```
