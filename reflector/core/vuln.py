@@ -2,16 +2,18 @@ import sys
 import requests
 from urllib.parse import quote
 from ..config import PLACEHOLDER
-from threading import Thread
+from threading import Thread, BoundedSemaphore
 import urllib3
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 
 class Vuln:
-    def __init__(self, urls, headers, proxies):
+    def __init__(self, urls, headers, proxies, max_threads=None):
         self.urls = urls
         self.headers = headers
         self.proxies = proxies
+        self.max_threads = max_threads
+        self.sema = BoundedSemaphore(value=self.max_threads)
 
     def generate_payloads(self):
         ctx = {
@@ -27,11 +29,16 @@ class Vuln:
             reflected = payloads[payload]
             _url = url.replace(PLACEHOLDER, quote(payload))
             try:
+                self.sema.acquire()
                 r = requests.get(_url, headers=headers, proxies=proxies, verify=False)
+                self.sema.release()
             except requests.exceptions.RequestException as e:
+                self.sema.release()
                 return
             if reflected in r.text:
-                sys.stdout.write(f"{_url}\n")
+                sys.stdout.write(f"[+] [B] {payload} {_url}\n")
+            if reflected in str(r.headers):
+                sys.stdout.write(f"[+] [H] {payload} {_url}\n")
         
     def attack(self):
         payloads = self.generate_payloads()

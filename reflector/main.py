@@ -64,13 +64,13 @@ def main():
     cleaned_urls = list(cleaned_urls)
 
     if args.all or args.xss:
-        i = XSS(cleaned_urls, x_headers, x_proxies)
+        i = XSS(cleaned_urls, x_headers, x_proxies, max_threads=args.threads)
         i.attack()
     if args.all or args.ssti:
-        i = SSTI(cleaned_urls, x_headers, x_proxies)
+        i = SSTI(cleaned_urls, x_headers, x_proxies, max_threads=args.threads)
         i.attack()
     if args.reflect:
-        i = Reflect(cleaned_urls, x_headers, x_proxies)
+        i = Reflect(cleaned_urls, x_headers, x_proxies, max_threads=args.threads)
         i.attack()
 
 
