@@ -25,13 +25,13 @@ class Vuln:
         proxies = proxies if proxies else dict()
         for payload in payloads.keys():
             reflected = payloads[payload]
-            url = url.replace(PLACEHOLDER, quote(payload))
+            _url = url.replace(PLACEHOLDER, quote(payload))
             try:
-                r = requests.get(url, headers=headers, proxies=proxies, verify=False)
+                r = requests.get(_url, headers=headers, proxies=proxies, verify=False)
             except requests.exceptions.RequestException as e:
                 return
             if reflected in r.text:
-                sys.stdout.write(f"{url}\n")
+                sys.stdout.write(f"{_url}\n")
         
     def attack(self):
         payloads = self.generate_payloads()
