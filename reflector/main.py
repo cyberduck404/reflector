@@ -4,7 +4,7 @@ import argparse
 from urllib.parse import urlparse, parse_qs, urlencode
 from .core.xss import XSS
 from .core.ssti import SSTI
-from .config import HARDCODED_EXTENSIONS
+from .config import HARDCODED_EXTENSIONS, PLACEHOLDER
 
 
 p = argparse.ArgumentParser()
@@ -55,7 +55,7 @@ def main():
         if not has_extension(cleaned_url, extensions):
             parsed_url = urlparse(cleaned_url)
             query_params = parse_qs(parsed_url.query)
-            cleaned_params = {key: args.keyword for key in query_params}
+            cleaned_params = {key: PLACEHOLDER for key in query_params}
             cleaned_query = urlencode(cleaned_params, doseq=True)
             cleaned_url = parsed_url._replace(query=cleaned_query).geturl()
             cleaned_urls.add(cleaned_url)
