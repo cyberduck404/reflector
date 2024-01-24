@@ -4,11 +4,13 @@ import argparse
 from urllib.parse import urlparse, parse_qs, urlencode
 from .core.xss import XSS
 from .core.ssti import SSTI
+from .core.reflect import Reflect
 from .config import HARDCODED_EXTENSIONS, PLACEHOLDER
 
 
 p = argparse.ArgumentParser()
-p.add_argument('-a', '--all', action='store_true', help='Enable all attacks')
+p.add_argument('-a', '--all', action='store_true', help='Enable all attacks except reflect')
+p.add_argument('-r', '--reflect', action='store_true', help='Enable reflect attack')
 p.add_argument('--xss', action='store_true', help='Enable XSS attack')
 p.add_argument('--ssti', action='store_true', help='Enable SSTI attack')
 p.add_argument('-x', '--proxy', help='Specify your proxy, like http://127.0.0.1:8080')
@@ -66,6 +68,9 @@ def main():
         i.attack()
     if args.all or args.ssti:
         i = SSTI(cleaned_urls, x_headers, x_proxies)
+        i.attack()
+    if args.reflect:
+        i = Reflect(cleaned_urls, x_headers, x_proxies)
         i.attack()
 
 
